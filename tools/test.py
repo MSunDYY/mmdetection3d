@@ -3,6 +3,10 @@ import mmcv
 import os
 import torch
 import warnings
+import os
+import sys
+os.chdir('..')
+sys.path.append('/home/msun/pan1/pointcloud/mmdetection3d')
 from mmcv import Config, DictAction
 from mmcv.cnn import fuse_conv_bn
 from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
@@ -19,8 +23,8 @@ from mmdet.datasets import replace_ImageToTensor
 def parse_args():
     parser = argparse.ArgumentParser(
         description='MMDet test (and eval) a model')
-    parser.add_argument('config', help='test config file path')
-    parser.add_argument('checkpoint', help='checkpoint file')
+    parser.add_argument('--config', default='configs/pointformer/votenet_ptr_sunrgbd-3d-10class.py',help='test config file path')
+    parser.add_argument('--checkpoint',default='checkpoints/votenet_ptr_sunrgbd-3d-10class.pth', help='checkpoint file')
     parser.add_argument('--out', help='output result file in pickle format')
     parser.add_argument(
         '--fuse-conv-bn',
@@ -37,6 +41,7 @@ def parse_args():
         '--eval',
         type=str,
         nargs='+',
+        default='mAP',
         help='evaluation metrics, which depends on the dataset, e.g., "bbox",'
         ' "segm", "proposal" for COCO, and "mAP", "recall" for PASCAL VOC')
     parser.add_argument('--show', action='store_true', help='show results')
@@ -126,10 +131,10 @@ def main():
 
     cfg.model.pretrained = None
     # in case the test dataset is concatenated
-    samples_per_gpu = 1
+    #samples_per_gpu = 1
     if isinstance(cfg.data.test, dict):
         cfg.data.test.test_mode = True
-        samples_per_gpu = cfg.data.test.pop('samples_per_gpu', 1)
+        samples_per_gpu = cfg.data.test.pop('samples_per_gpu', 2)
         if samples_per_gpu > 1:
             # Replace 'ImageToTensor' to 'DefaultFormatBundle'
             cfg.data.test.pipeline = replace_ImageToTensor(

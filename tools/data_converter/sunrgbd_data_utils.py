@@ -1,7 +1,9 @@
-import mmcv
-import numpy as np
+# Copyright (c) OpenMMLab. All rights reserved.
 from concurrent import futures as futures
 from os import path as osp
+
+import mmcv
+import numpy as np
 from scipy import io as sio
 
 
@@ -41,8 +43,11 @@ class SUNRGBDInstance(object):
         self.ymax = data[2] + data[4]
         self.box2d = np.array([self.xmin, self.ymin, self.xmax, self.ymax])
         self.centroid = np.array([data[5], data[6], data[7]])
-        # data[9] is dx (l), data[8] is dy (w), data[10] is dz (h)
-        # in our depth coordinate system,
+        self.width = data[8]
+        self.length = data[9]
+        self.height = data[10]
+        # data[9] is x_size (length), data[8] is y_size (width), data[10] is
+        # z_size (height) in our depth coordinate system,
         # l corresponds to the size along the x axis
         self.size = np.array([data[9], data[8], data[10]]) * 2
         self.orientation = np.zeros((3, ))
@@ -61,8 +66,8 @@ class SUNRGBDData(object):
 
     Args:
         root_path (str): Root path of the raw data.
-        split (str): Set split type of the data. Default: 'train'.
-        use_v1 (bool): Whether to use v1. Default: False.
+        split (str, optional): Set split type of the data. Default: 'train'.
+        use_v1 (bool, optional): Whether to use v1. Default: False.
     """
 
     def __init__(self, root_path, split='train', use_v1=False):
@@ -127,9 +132,11 @@ class SUNRGBDData(object):
         This method gets information from the raw data.
 
         Args:
-            num_workers (int): Number of threads to be used. Default: 4.
-            has_label (bool): Whether the data has label. Default: True.
-            sample_id_list (list[int]): Index list of the sample.
+            num_workers (int, optional): Number of threads to be used.
+                Default: 4.
+            has_label (bool, optional): Whether the data has label.
+                Default: True.
+            sample_id_list (list[int], optional): Index list of the sample.
                 Default: None.
 
         Returns:
@@ -190,7 +197,7 @@ class SUNRGBDData(object):
                     ],
                                                              axis=0)
                     annotations['dimensions'] = 2 * np.array([
-                        [obj.l, obj.w, obj.h] for obj in obj_list
+                        [obj.length, obj.width, obj.height] for obj in obj_list
                         if obj.classname in self.cat2label.keys()
                     ])  # lwh (depth) format
                     annotations['rotation_y'] = np.array([

@@ -10,6 +10,10 @@ import warnings
 from mmcv import Config, DictAction
 from mmcv.runner import get_dist_info, init_dist
 from os import path as osp
+import os
+os.chdir('..')
+import sys
+sys.path.append(os.getcwd())
 
 from mmdet import __version__ as mmdet_version
 from mmdet3d import __version__ as mmdet3d_version
@@ -23,7 +27,7 @@ from mmseg import __version__ as mmseg_version
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
-    parser.add_argument('config', help='train config file path')
+    parser.add_argument('--config',default='configs/pointformer/votenet_ptr_sunrgbd-3d-10class.py', help='train config file path')
     parser.add_argument('--work-dir', help='the dir to save logs and models')
     parser.add_argument(
         '--resume-from', help='the checkpoint file to resume from')

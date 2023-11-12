@@ -1,5 +1,8 @@
 import argparse
 from os import path as osp
+import os
+import sys
+sys.path.append(os.getcwd())
 
 from tools.data_converter import indoor_converter as indoor
 from tools.data_converter import kitti_converter as kitti
@@ -209,7 +212,7 @@ parser.add_argument('dataset', metavar='kitti', help='name of the dataset')
 parser.add_argument(
     '--root-path',
     type=str,
-    default='./data/kitti',
+    default='./data/sunrgbd',
     help='specify the root path of dataset')
 parser.add_argument(
     '--version',
@@ -226,10 +229,10 @@ parser.add_argument(
 parser.add_argument(
     '--out-dir',
     type=str,
-    default='./data/kitti',
+    default='./data/rgbd',
     required=False,
     help='name of info pkl')
-parser.add_argument('--extra-tag', type=str, default='kitti')
+parser.add_argument('--extra-tag', type=str, default='sunrgbd')
 parser.add_argument(
     '--workers', type=int, default=4, help='number of threads to be used')
 args = parser.parse_args()
