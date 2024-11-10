@@ -84,8 +84,9 @@ def single_gpu_test(model,
                         score_thr=show_score_thr)
 
         if 'pred_occ' in result[0]:
-            result[0]['pred_occ'] = result[0]['pred_occ'].cpu()
-            result[0]['pano_inst'] = result[0]['pano_inst'].cpu()
+            for i in range(len(result)):
+                result[i]['pred_occ'] = result[i]['pred_occ'].cpu()
+                result[i]['pano_inst'] = result[i]['pano_inst'].cpu()
 
         results.extend(result)
 
