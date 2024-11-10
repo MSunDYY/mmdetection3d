@@ -82,7 +82,14 @@ def single_gpu_test(model,
                         show=show,
                         out_file=out_file,
                         score_thr=show_score_thr)
+
+        if 'pred_occ' in result[0]:
+            print('d')
+            result[0]['pred_occ'] = result[0]['pred_occ'].cpu()
+            result[0]['pano_inst'] = result[0]['pano_inst'].cpu()
+
         results.extend(result)
+
 
         batch_size = len(result)
         for _ in range(batch_size):
