@@ -83,7 +83,7 @@ def single_gpu_test(model,
                         out_file=out_file,
                         score_thr=show_score_thr)
 
-        if 'pred_occ' in result[0]:
+        if isinstance(result[0], dict) and 'pred_occ' in result[0]:
             for i in range(len(result)):
                 result[i]['pred_occ'] = result[i]['pred_occ'].cpu()
                 result[i]['pano_inst'] = result[i]['pano_inst'].cpu()
